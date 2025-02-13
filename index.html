@@ -1,246 +1,238 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>My Valentine’s Gift</title>
-  <style>
-    /* Global Styles */
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: sans-serif;
-    }
-    .page {
-      display: none;
-      position: relative;
-      width: 100%;
-      height: 100vh;
-    }
-    .active {
-      display: block;
-    }
-    .btn {
-      padding: 15px 30px;
-      font-size: 1.5em;
-      cursor: pointer;
-      margin: 20px;
-    }
-    /* Page 1 Styles */
-    #page1 {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fce4ec;
-    }
-    /* Page 2 Styles (Photos) */
-    #page2 {
-      background: #fff;
-    }
-    .photo {
-      position: absolute;
-      width: 200px;
-      opacity: 0;
-      transition: all 1s ease-in-out;
-    }
-    .from-above {
-      top: -300px;
-    }
-    .from-below {
-      bottom: -300px;
-    }
-    /* Once animated, move into view (adjust positions as needed) */
-    .photo.show {
-      opacity: 1;
-    }
-    #photo1.show { top: 20%; left: 10%; }
-    #photo2.show { bottom: 20%; right: 10%; }
-    #photo3.show { top: 30%; right: 15%; }
-    #photo4.show { bottom: 30%; left: 15%; }
-    
-    /* Page 3 Styles (I Love You!) */
-    #page3 {
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      position: relative;
-    }
-    #page3 .girlfriend-photo {
-      width: 250px;
-      border-radius: 50%;
-      z-index: 2;
-    }
-    #page3 .crown {
-      position: absolute;
-      top: 10%;
-      z-index: 3;
-    }
-    #page3 h1 {
-      font-size: 3em;
-      margin: 20px;
-      color: #e91e63;
-    }
-    
-    /* Page 4 Styles (Final Valentine’s Question) */
-    #page4 {
-      background: pink;
-      text-align: center;
-      padding-top: 50px;
-    }
-    #page4 h1 {
-      font-size: 3em;
-      color: #fff;
-      margin-bottom: 30px;
-    }
-    /* Heart Animation */
-    .heart {
-      position: absolute;
-      font-size: 2em;
-      animation: fall 5s infinite;
-      opacity: 0;
-    }
-    @keyframes fall {
-      0%   { top: -50px; opacity: 0; }
-      20%  { opacity: 1; }
-      100% { top: calc(100vh - 50px); opacity: 0; }
-    }
-    /* Response Message */
-    #responseMessage h2 {
-      font-size: 2em;
-      color: #fff;
-    }
-  </style>
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Arial', sans-serif;
+            background: #ffb6c1; /* Pink background for all pages */
+        }
+
+        .section {
+            display: none;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+
+        .active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .big-button {
+            padding: 20px 40px;
+            font-size: 2em;
+            border-radius: 50px;
+            background: #ff4081;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 20px;
+            z-index: 3;
+        }
+
+        .big-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Photo Section Adjustments */
+        .photos-container {
+            position: relative;
+            height: 70vh;
+            width: 100%;
+        }
+
+        .photo {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform-origin: center;
+            transition: transform 0.3s;
+        }
+
+        #photo1 { left: 10%; top: 20%; }
+        #photo2 { left: 70%; top: 10%; }
+        #photo3 { left: 20%; top: 60%; }
+        #photo4 { left: 60%; top: 50%; }
+
+        .slide-in-top {
+            animation: slideTop 1s forwards;
+        }
+
+        .slide-in-bottom {
+            animation: slideBottom 1s forwards;
+        }
+
+        @keyframes slideTop {
+            from { transform: translateY(-100vh) rotate(-10deg); opacity: 0; }
+            to { transform: translateY(0) rotate(var(--rotate)); opacity: 1; }
+        }
+
+        @keyframes slideBottom {
+            from { transform: translateY(100vh) rotate(10deg); opacity: 0; }
+            to { transform: translateY(0) rotate(var(--rotate)); opacity: 1; }
+        }
+
+        /* Her Photo Adjustments */
+        #section3 {
+            gap: 10px;
+        }
+
+        .her-photo {
+            width: 280px;
+            height: 373px; /* Maintain 961/1280 aspect ratio */
+            border-radius: 15px;
+            object-fit: cover;
+            margin-top: 140px; /* Push photo down */
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+
+        .crown {
+            width: 200px; /* Increased crown size */
+            position: absolute;
+            top: 90px; /* Position above photo */
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            z-index: 2;
+        }
+
+        /* Hearts Animation */
+        .heart {
+            position: absolute;
+            color: #ff0000;
+            font-size: 2.5rem;
+            animation: fall 3s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Response Section */
+        #response {
+            z-index: 2;
+            position: relative;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-  <!-- Page 1: Start -->
-  <div id="page1" class="page active">
-    <button id="startBtn" class="btn">Click Me</button>
-  </div>
-  
-  <!-- Page 2: Photos Animation -->
-  <div id="page2" class="page">
-    <!-- Replace 'photoX.jpg' with your provided images -->
-    <img id="photo1" src="photo1.jpg" class="photo from-above" alt="Photo 1">
-    <img id="photo2" src="photo2.jpg" class="photo from-below" alt="Photo 2">
-    <img id="photo3" src="photo3.jpg" class="photo from-above" alt="Photo 3">
-    <img id="photo4" src="photo4.jpg" class="photo from-below" alt="Photo 4">
-    <button id="continueBtn" class="btn" style="display: none;">Continue</button>
-  </div>
-  
-  <!-- Page 3: I Love You -->
-  <div id="page3" class="page">
-    <!-- Decorative crown -->
-    <div class="crown">
-      <!-- Replace with your crown image -->
-      <img src="crown.png" alt="Crown" width="100">
+    <!-- Section 1 - Initial Button -->
+    <div class="section active" id="section1">
+        <button class="big-button" onclick="startAnimation()">დამაჭირე!</button>
     </div>
-    <!-- Girlfriend photo -->
-    <img class="girlfriend-photo" src="girlfriend.jpg" alt="Girlfriend">
-    <!-- Decorative flowers (can be CSS or images) -->
-    <div class="flowers">
-      <!-- Your decorative element here -->
+
+    <!-- Section 2 - Photos -->
+    <div class="section" id="section2">
+        <div class="photos-container">
+            <img src="photo1.jpeg" class="photo" id="photo1">
+            <img src="photo2.jpeg" class="photo" id="photo2">
+            <img src="photo3.jpeg" class="photo" id="photo3">
+            <img src="photo4.jpeg" class="photo" id="photo4">
+        </div>
+        <button class="big-button" onclick="showLoveSection()">კიდევ</button>
     </div>
-    <h1>I Love You!</h1>
-    <button id="finishBtn" class="btn">Finish</button>
-  </div>
-  
-  <!-- Page 4: Final Valentine’s Question -->
-  <div id="page4" class="page">
-    <h1>Will you be my valentine?</h1>
-    <button id="yesBtn" class="btn">Yes</button>
-    <button id="noBtn" class="btn">No</button>
-    <div id="responseMessage"></div>
-    <!-- This button will appear after a “Yes” response to restart the flow -->
-    <button id="resetBtn" class="btn" style="display: none;">Restart</button>
-  </div>
-  
-  <script>
-    // Function to show a specific page and hide others
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-      });
-      document.getElementById(pageId).classList.add('active');
-    }
-    
-    // --- Page 1: Start Button ---
-    document.getElementById('startBtn').addEventListener('click', () => {
-      showPage('page2');
-      
-      // Animate photos into view with a slight delay.
-      setTimeout(() => {
-        document.getElementById('photo1').classList.add('show');
-        document.getElementById('photo2').classList.add('show');
-        document.getElementById('photo3').classList.add('show');
-        document.getElementById('photo4').classList.add('show');
-        
-        // After photos animate in (e.g., after 2 seconds), show the Continue button.
-        setTimeout(() => {
-          document.getElementById('continueBtn').style.display = 'block';
-        }, 2000);
-      }, 500);
-    });
-    
-    // --- Page 2: Continue Button ---
-    document.getElementById('continueBtn').addEventListener('click', () => {
-      showPage('page3');
-    });
-    
-    // --- Page 3: Finish Button ---
-    document.getElementById('finishBtn').addEventListener('click', () => {
-      showPage('page4');
-      // Start generating falling hearts on Page 4
-      startHeartAnimation();
-    });
-    
-    // --- Page 4: Yes/No Buttons ---
-    document.getElementById('noBtn').addEventListener('click', () => {
-      document.getElementById('responseMessage').innerHTML = "<h2>😢 Are you sure?</h2>";
-      // The Yes/No buttons remain so she can try again.
-    });
-    
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      document.getElementById('responseMessage').innerHTML = "<h2>😊 Yay!</h2>";
-      // Remove Yes/No buttons
-      document.getElementById('yesBtn').style.display = 'none';
-      document.getElementById('noBtn').style.display = 'none';
-      // Show the Reset button to start over.
-      document.getElementById('resetBtn').style.display = 'block';
-    });
-    
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      // Reset messages and buttons for a fresh start.
-      document.getElementById('responseMessage').innerHTML = "";
-      document.getElementById('yesBtn').style.display = 'inline-block';
-      document.getElementById('noBtn').style.display = 'inline-block';
-      document.getElementById('resetBtn').style.display = 'none';
-      showPage('page1');
-    });
-    
-    // --- Falling Hearts Animation on Page 4 ---
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.textContent = '❤️';
-      // Random horizontal position
-      heart.style.left = Math.random() * 100 + 'vw';
-      // Randomize animation duration a bit
-      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      document.getElementById('page4').appendChild(heart);
-      
-      // Remove the heart after the animation ends (roughly 5s)
-      setTimeout(() => {
-        heart.remove();
-      }, 5000);
-    }
-    
-    // Continuously create hearts every half second.
-    function startHeartAnimation() {
-      setInterval(createHeart, 500);
-    }
-  </script>
+
+    <!-- Section 3 - Love Message -->
+    <div class="section" id="section3">
+        <div style="position: relative;">
+            <img src="crown.png" class="crown">
+            <img src="her_photo.jpeg" class="her-photo">
+        </div>
+        <h1 style="font-size: 4em; color: #ff4081;">ყველაზე მეტად მიყვარხარ!</h1>
+        <button class="big-button" onclick="showFinalPage()">დასასრული</button>
+    </div>
+
+    <!-- Section 4 - Valentine Question -->
+    <div class="section final-page" id="section4">
+        <h1 style="font-size: 3em; color: #ff4081;">იქნები ჩემი ვალენტინი?</h1>
+        <div id="response">
+            <button class="big-button" onclick="handleYes()">კი</button>
+            <button class="big-button" onclick="handleNo()">არა</button>
+        </div>
+    </div>
+
+    <script>
+        // Previous JavaScript remains the same
+        function startAnimation() {
+            document.getElementById('section1').classList.remove('active');
+            document.getElementById('section2').classList.add('active');
+            
+            const photos = document.querySelectorAll('.photo');
+            photos.forEach((photo, index) => {
+                setTimeout(() => {
+                    const rotate = (Math.random() * 20 - 10).toFixed(1);
+                    photo.style.setProperty('--rotate', `${rotate}deg`);
+                    photo.style.opacity = '1';
+                    photo.classList.add(index % 2 === 0 ? 'slide-in-top' : 'slide-in-bottom');
+                }, index * 500);
+            });
+        }
+
+        function showLoveSection() {
+            document.getElementById('section2').classList.remove('active');
+            document.getElementById('section3').classList.add('active');
+        }
+
+        function showFinalPage() {
+            document.getElementById('section3').classList.remove('active');
+            document.getElementById('section4').classList.add('active');
+            createHearts();
+        }
+
+        function createHearts() {
+            const container = document.getElementById('section4');
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.fontSize = (Math.random() * 2 + 2) + 'rem';
+                container.appendChild(heart);
+            }
+        }
+
+        function handleYes() {
+            const response = document.getElementById('response');
+            response.innerHTML = `
+                <h1>😍</h1>
+                <h2>მეც თანახმა ვარ</h2>
+                <button class="big-button" onclick="restart()">Start Over</button>
+            `;
+        }
+
+        function handleNo() {
+            const response = document.getElementById('response');
+            response.innerHTML = `
+                <h1>🤡</h1>
+                <h2>უკეთ დაფიქრდი...</h2>
+                <button class="big-button" onclick="handleYes()">Yes</button>
+                <button class="big-button" onclick="handleNo()">No</button>
+            `;
+        }
+
+        function restart() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+                if(section.id === 'section4') {
+                    section.querySelectorAll('.heart').forEach(heart => heart.remove());
+                }
+            });
+            document.getElementById('section1').classList.add('active');
+        }
+    </script>
 </body>
 </html>
-
