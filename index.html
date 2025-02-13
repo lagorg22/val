@@ -1,17 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My React App</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>My Valentine’s Gift</title>
+  <style>
+    /* Global Styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    .page {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+    .active {
+      display: block;
+    }
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.5em;
+      cursor: pointer;
+      margin: 20px;
+    }
+    /* Page 1 Styles */
+    #page1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fce4ec;
+    }
+    /* Page 2 Styles (Photos) */
+    #page2 {
+      background: #fff;
+    }
+    .photo {
+      position: absolute;
+      width: 200px;
+      opacity: 0;
+      transition: all 1s ease-in-out;
+    }
+    .from-above {
+      top: -300px;
+    }
+    .from-below {
+      bottom: -300px;
+    }
+    /* Once animated, move into view (adjust positions as needed) */
+    .photo.show {
+      opacity: 1;
+    }
+    #photo1.show { top: 20%; left: 10%; }
+    #photo2.show { bottom: 20%; right: 10%; }
+    #photo3.show { top: 30%; right: 15%; }
+    #photo4.show { bottom: 30%; left: 15%; }
+    
+    /* Page 3 Styles (I Love You!) */
+    #page3 {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      position: relative;
+    }
+    #page3 .girlfriend-photo {
+      width: 250px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+    #page3 .crown {
+      position: absolute;
+      top: 10%;
+      z-index: 3;
+    }
+    #page3 h1 {
+      font-size: 3em;
+      margin: 20px;
+      color: #e91e63;
+    }
+    
+    /* Page 4 Styles (Final Valentine’s Question) */
+    #page4 {
+      background: pink;
+      text-align: center;
+      padding-top: 50px;
+    }
+    #page4 h1 {
+      font-size: 3em;
+      color: #fff;
+      margin-bottom: 30px;
+    }
+    /* Heart Animation */
+    .heart {
+      position: absolute;
+      font-size: 2em;
+      animation: fall 5s infinite;
+      opacity: 0;
+    }
+    @keyframes fall {
+      0%   { top: -50px; opacity: 0; }
+      20%  { opacity: 1; }
+      100% { top: calc(100vh - 50px); opacity: 0; }
+    }
+    /* Response Message */
+    #responseMessage h2 {
+      font-size: 2em;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-    <div id="root"></div> <!-- React will insert content here -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script type="text/babel" src="index.js"></script>
+  <!-- Page 1: Start -->
+  <div id="page1" class="page active">
+    <button id="startBtn" class="btn">Click Me</button>
+  </div>
+  
+  <!-- Page 2: Photos Animation -->
+  <div id="page2" class="page">
+    <!-- Replace 'photoX.jpg' with your provided images -->
+    <img id="photo1" src="photo1.jpg" class="photo from-above" alt="Photo 1">
+    <img id="photo2" src="photo2.jpg" class="photo from-below" alt="Photo 2">
+    <img id="photo3" src="photo3.jpg" class="photo from-above" alt="Photo 3">
+    <img id="photo4" src="photo4.jpg" class="photo from-below" alt="Photo 4">
+    <button id="continueBtn" class="btn" style="display: none;">Continue</button>
+  </div>
+  
+  <!-- Page 3: I Love You -->
+  <div id="page3" class="page">
+    <!-- Decorative crown -->
+    <div class="crown">
+      <!-- Replace with your crown image -->
+      <img src="crown.png" alt="Crown" width="100">
+    </div>
+    <!-- Girlfriend photo -->
+    <img class="girlfriend-photo" src="girlfriend.jpg" alt="Girlfriend">
+    <!-- Decorative flowers (can be CSS or images) -->
+    <div class="flowers">
+      <!-- Your decorative element here -->
+    </div>
+    <h1>I Love You!</h1>
+    <button id="finishBtn" class="btn">Finish</button>
+  </div>
+  
+  <!-- Page 4: Final Valentine’s Question -->
+  <div id="page4" class="page">
+    <h1>Will you be my valentine?</h1>
+    <button id="yesBtn" class="btn">Yes</button>
+    <button id="noBtn" class="btn">No</button>
+    <div id="responseMessage"></div>
+    <!-- This button will appear after a “Yes” response to restart the flow -->
+    <button id="resetBtn" class="btn" style="display: none;">Restart</button>
+  </div>
+  
+  <script>
+    // Function to show a specific page and hide others
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+    
+    // --- Page 1: Start Button ---
+    document.getElementById('startBtn').addEventListener('click', () => {
+      showPage('page2');
+      
+      // Animate photos into view with a slight delay.
+      setTimeout(() => {
+        document.getElementById('photo1').classList.add('show');
+        document.getElementById('photo2').classList.add('show');
+        document.getElementById('photo3').classList.add('show');
+        document.getElementById('photo4').classList.add('show');
+        
+        // After photos animate in (e.g., after 2 seconds), show the Continue button.
+        setTimeout(() => {
+          document.getElementById('continueBtn').style.display = 'block';
+        }, 2000);
+      }, 500);
+    });
+    
+    // --- Page 2: Continue Button ---
+    document.getElementById('continueBtn').addEventListener('click', () => {
+      showPage('page3');
+    });
+    
+    // --- Page 3: Finish Button ---
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      showPage('page4');
+      // Start generating falling hearts on Page 4
+      startHeartAnimation();
+    });
+    
+    // --- Page 4: Yes/No Buttons ---
+    document.getElementById('noBtn').addEventListener('click', () => {
+      document.getElementById('responseMessage').innerHTML = "<h2>😢 Are you sure?</h2>";
+      // The Yes/No buttons remain so she can try again.
+    });
+    
+    document.getElementById('yesBtn').addEventListener('click', () => {
+      document.getElementById('responseMessage').innerHTML = "<h2>😊 Yay!</h2>";
+      // Remove Yes/No buttons
+      document.getElementById('yesBtn').style.display = 'none';
+      document.getElementById('noBtn').style.display = 'none';
+      // Show the Reset button to start over.
+      document.getElementById('resetBtn').style.display = 'block';
+    });
+    
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      // Reset messages and buttons for a fresh start.
+      document.getElementById('responseMessage').innerHTML = "";
+      document.getElementById('yesBtn').style.display = 'inline-block';
+      document.getElementById('noBtn').style.display = 'inline-block';
+      document.getElementById('resetBtn').style.display = 'none';
+      showPage('page1');
+    });
+    
+    // --- Falling Hearts Animation on Page 4 ---
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = '❤️';
+      // Random horizontal position
+      heart.style.left = Math.random() * 100 + 'vw';
+      // Randomize animation duration a bit
+      heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.getElementById('page4').appendChild(heart);
+      
+      // Remove the heart after the animation ends (roughly 5s)
+      setTimeout(() => {
+        heart.remove();
+      }, 5000);
+    }
+    
+    // Continuously create hearts every half second.
+    function startHeartAnimation() {
+      setInterval(createHeart, 500);
+    }
+  </script>
 </body>
 </html>
 
